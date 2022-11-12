@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { CredentialContext } from "../../App";
 import { Link, useNavigate } from "react-router-dom";
 import { BsFillPersonFill } from "react-icons/bs";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -9,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(null);
   const navigate = useNavigate();
+  const [, setCredentials] = useContext(CredentialContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,14 +22,15 @@ const Login = () => {
       .then((res) => {
         console.log(res);
         if (!res.ok) {
-          setErr("Wrong password or username");
+          setErr("Wrong password or username !");
           setUsername("");
           setPassword("");
-          throw Error("Salah");
+          throw Error("Salah. Try again!");
         }
         return res.json();
       })
       .then(() => {
+        setCredentials({username, password})
         console.log("Login Successful");
         navigate("/Main");
       })

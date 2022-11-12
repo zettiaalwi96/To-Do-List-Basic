@@ -9,6 +9,8 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [err, setErr] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,7 +19,18 @@ const SignUp = () => {
       body: JSON.stringify({ username, email, password }),
       headers: { "Content-Type": "application/json" },
     })
-      .then((res) => res.json())
+      //.then((res) => res.json())
+      .then((res) => {
+        //console.log(res);
+        if (!res.ok) {
+          setErr("Username already exist. Try again !");
+        } 
+        if (res.ok) {
+          setSuccess("Account successfully created !")
+          setErr("")
+        }
+        return res.json();
+      })
       .then((data) => {
         console.log(data);
         setUsername("");
@@ -26,24 +39,14 @@ const SignUp = () => {
       });
   };
 
-  // async function handleSubmit(e) {
-  //     e.preventDefault();
-  //     const response = await fetch(baseURL + "/signup", {
-  //       method: "POST",
-  //       body: JSON.stringify({ username, email, password }),
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-
-  //     const data = await response.json()
-  //     console.log(data)
-  // }
-
   return (
     <div>
       <h1>Create Your Account</h1>
       <h4>Please enter info to create account</h4>
 
       <form onSubmit={handleSubmit}>
+        {err && <p> {err} </p>}
+        {success && <p> {success} </p>}
         <label htmlFor="username">
           <BsFillPersonFill />
         </label>

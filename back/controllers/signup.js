@@ -17,19 +17,6 @@ signup.get("/", (req, res) => {
 // signup.get("/login", (req, res) => {});
 
 signup.post("/", (req, res) => {
-  //   console.log(req.body);
-  //   try {
-  //     const user = await SignUp.create({
-  //       name: req.body.name,
-  //       email: req.body.email,
-  //       password: req.body.password,
-  //     });
-  //     res.json({ status: "ok" });
-  //   } catch (err) {
-  //       console.log(err)
-  //     res.json({ status: "error", error: "Duplicate username" });
-  //   }
-
   console.log(req.body);
   req.body.password = bcrypt.hashSync(
     req.body.password,
@@ -38,7 +25,6 @@ signup.post("/", (req, res) => {
   SignUp.create(req.body, (err, createdSignUp) => {
     if (err) {
       console.log(err);
-      //res.status(400).json({ err: err.message });
       if (err.code == 11000)
         res.status(400).json({ err: "User already exist" });
     } else res.json(createdSignUp);
