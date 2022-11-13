@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import EditTaskPopup from "./EditTask";
 
-const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
+const Card = ({index, task, baseURL, updateTask, deleteTask }) => {
   const [modal, setModal] = useState(false);
 
   const colors = [
@@ -31,13 +31,15 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
     setModal(!modal);
   };
 
-  const updateTask = (obj) => {
-    updateListArray(obj, index);
-  };
+  //------------ STORE DATA IN LOCAL STORAGE INSTEAD TO DATABASE ----------
+  // const updateTask = (obj) => {
+  //   updateListArray(obj, index);
+  // };
 
-  const handleDelete = () => {
-    deleteTask(index);
-  };
+  // const handleDelete = () => {
+  //   deleteTask(index);
+  // };
+  //------------------------------------------------------------------------
 
   return (
     <div className="card-wrapper mr-5">
@@ -53,9 +55,9 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
             borderRadius: "10px",
           }}
         >
-          {taskObj.Name}
+          {task.taskName}
         </span>
-        <p className="mt-3">{taskObj.Description}</p>
+        <p className="mt-3">{task.description}</p>
 
         <div style={{ position: "absolute", right: "20px", bottom: "20px" }}>
           <i
@@ -70,7 +72,7 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
           <i
             className="fas fa-trash-alt"
             style={{ color: colors[index % 5].primaryColor, cursor: "pointer" }}
-            onClick={handleDelete}
+            onClick={() => deleteTask(task._id)}
           ></i>
         </div>
       </div>
@@ -78,7 +80,9 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
         modal={modal}
         toggle={toggle}
         updateTask={updateTask}
-        taskObj={taskObj}
+        // taskObj={taskObj}
+        task={task}
+        baseURL={baseURL}
       />
     </div>
   );

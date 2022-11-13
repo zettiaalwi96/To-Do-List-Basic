@@ -1,26 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { CredentialContext } from "../../App";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-const CreateTaskPopup = ({ modal, toggle, save }) => {
+const CreateTaskPopup = ({ modal, toggle, baseURL, handleAddTask }) => {
+  const [credentials] = useContext(CredentialContext);
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  //------------ STORE DATA IN LOCAL STORAGE INSTEAD TO DATABASE ----------
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
 
-    if (name === "taskName") {
-      setTaskName(value);
-    } else {
-      setDescription(value);
-    }
-  };
+  //   if (name === "taskName") {
+  //     setTaskName(value);
+  //   } else {
+  //     setDescription(value);
+  //   }
+  // };
 
-  const handleSave = (e) => {
+  // const handleSave = (e) => {
+  //   e.preventDefault();
+  //   let taskObj = {};
+  //   taskObj["Name"] = taskName;
+  //   taskObj["Description"] = description;
+  //   save(taskObj);
+  // };
+  //------------------------------------------------------------------------
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    let taskObj = {};
-    taskObj["Name"] = taskName;
-    taskObj["Description"] = description;
-    save(taskObj);
+    fetch(baseURL + "/Main", {
+      method: "POST",
+      Authorization: `Basic ${credentials.username}:${credentials.password}`,
+      body: JSON.stringify({
+        taskName,
+        description,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resJson) => {
+        handleAddTask(resJson);
+      })
+      .then(() => {
+        setTaskName("");
+        setDescription("");
+        toggle();
+      });
   };
 
   return (
@@ -33,7 +61,8 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
             type="text"
             className="form-control"
             value={taskName}
-            onChange={handleChange}
+            // onChange={handleChange}
+            onChange={(e) => setTaskName(e.target.value)}
             name="taskName"
           />
         </div>
@@ -43,13 +72,14 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
             rows="5"
             className="form-control"
             value={description}
-            onChange={handleChange}
+            // onChange={handleChange}
+            onChange={(e) => setDescription(e.target.value)}
             name="description"
           ></textarea>
         </div>
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={handleSave}>
+        <Button color="primary" onClick={handleSubmit}>
           Create
         </Button>
         <Button color="secondary" onClick={toggle}>

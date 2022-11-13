@@ -12,6 +12,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [, setCredentials] = useContext(CredentialContext);
 
+  //const history=useHistory()
+
   const handleSubmit = (e) => {
     e.preventDefault();
     fetch(baseURL + "/login", {
@@ -30,7 +32,8 @@ const Login = () => {
         return res.json();
       })
       .then(() => {
-        setCredentials({username, password})
+        setCredentials({ username, password })
+        //history.push('/Main')
         console.log("Login Successful");
         navigate("/Main");
       })

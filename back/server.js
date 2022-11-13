@@ -37,6 +37,8 @@ app.use(cors(corsOption));
 // CONTROLLERS
 const signupController = require("./controllers/signup")
 const loginController = require("./controllers/login")
+const taskController = require("./controllers/task")
 
 app.use ("/login", loginController)
-app.use("/signup", signupController)
+app.use("/signup", signupController) 
+app.use("/Main", taskController)

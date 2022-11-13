@@ -1,94 +1,173 @@
 import React, { useContext, useEffect, useState } from "react";
+import {useNavigate } from "react-router-dom";
+import { VscColorMode } from "react-icons/vsc";
 import { CredentialContext } from "../../App";
 
 import CreateTaskPopup from "./CreateTask";
 import Card from "./Card";
 
+let baseURL = "http://localhost:3001";
+
 const MainPage = () => {
-  const [credentials] = useContext(CredentialContext);
+  const [credentials, setCredentials] = useContext(CredentialContext);
+  const navigate = useNavigate();
   const [modal, setModal] = useState(false);
   const [taskList, setTaskList] = useState([]);
+  const [task] = useState({});
+
+  const [darkMode, setDarkMode] = useState(false);
 
   const toggle = () => {
     setModal(!modal);
   };
 
-  const saveTask = (taskObj) => {
-    let tempList = taskList;
-    tempList.push(taskObj);
-    localStorage.setItem("taskList", JSON.stringify(tempList));
-    setTaskList(taskList);
-    setModal(false);
+  //------------ STORE DATA IN LOCAL STORAGE INSTEAD TO DATABASE ----------
+  // const saveTask = (taskObj) => {
+  //   let tempList = taskList;
+  //   tempList.push(taskObj);
+  //   localStorage.setItem("taskList", JSON.stringify(tempList));
+  //   setTaskList(taskList);
+  //   setModal(false);
+  // };
+
+  //   // To save data in local storage
+  // useEffect(() => {
+  //   let arr = localStorage.getItem("taskList");
+
+  //   if (arr) {
+  //     let obj = JSON.parse(arr);
+  //     setTaskList(obj);
+  //   }
+  // }, []);
+
+  // const deleteTask = (index) => {
+  //   let tempList = taskList;
+  //   tempList.splice(index, 1);
+  //   localStorage.setItem("taskList", JSON.stringify(tempList));
+  //   setTaskList(tempList);
+  //   window.location.reload();
+  // };
+
+  // const updateListArray = (obj, index) => {
+  //   let tempList = taskList;
+  //   tempList[index] = obj;
+  //   localStorage.setItem("taskList", JSON.stringify(tempList));
+  //   setTaskList(tempList);
+  //   window.location.reload();
+  // };
+
+  //------------------------------------------------------------------------
+
+  const logout = () => {
+    setCredentials(null);
+    navigate('/login')
   };
 
-    // To save data in local storage
+  const getTask = () => {
+    fetch(baseURL + "/Main", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: `Basic ${credentials.username}:${credentials.password}`,
+      },
+    })
+      .then(
+        (data) => {
+          return data.json();
+        },
+        (err) => console.log(err)
+      )
+      .then(
+        (parsedData) => {
+          setTaskList(parsedData);
+        },
+        (err) => console.log(err)
+      );
+  };
   useEffect(() => {
-    let arr = localStorage.getItem("taskList");
+    getTask();
+  });
 
-    if (arr) {
-      let obj = JSON.parse(arr);
-      setTaskList(obj);
-    }
-  }, []);
-
-  const deleteTask = (index) => {
-    let tempList = taskList;
-    tempList.splice(index, 1);
-    localStorage.setItem("taskList", JSON.stringify(tempList));
-    setTaskList(tempList);
-    window.location.reload();
+  const handleAddTask = () => {
+    const currentTask = [...taskList];
+    currentTask.unshift(task);
+    setTaskList(currentTask);
   };
 
-  const updateListArray = (obj, index) => {
-    let tempList = taskList;
-    tempList[index] = obj;
-    localStorage.setItem("taskList", JSON.stringify(tempList));
-    setTaskList(tempList);
-    window.location.reload();
+  const deleteTask = (id) => {
+    fetch(baseURL + "/Main/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: `Basic ${credentials.username}:${credentials.password}`,
+      },
+    }).then((response) => {
+      const findIndex = taskList.findIndex((task) => task._id === id);
+      const exisitingTask = [...taskList];
+      exisitingTask.splice(findIndex, 1);
+      setTaskList(exisitingTask);
+    });
   };
 
-  //   const toggle = () => {
-  //     setModal(!modal);
-  //   };
-
-  //   const saveTask = (taskObj) => {
-  //     let tempList = taskList;
-  //     tempList.push(taskObj);
-  //     localStorage.setItem("taskList", JSON.stringify(tempList));
-  //     setTaskList(taskList);
-  //     setModal(false);
-  //   };
+  const updateTask = (updatedTask) => {
+    const currentTasks = [...taskList];
+    const findIndex = currentTasks.findIndex(
+      (currentTask) => currentTask._id === updatedTask._id
+    );
+    currentTasks[findIndex] = updatedTask;
+    setTaskList(currentTasks);
+  };
 
   return (
-    <div>
-      <div>
-        <h1> Hello {credentials && credentials.username} </h1>
+    <div className={`${darkMode && "dark-mode"}`}>
+      <div className="header">
+        <div className="greetings">
+          <h6> Hello {credentials && credentials.username}, welcome ! </h6>
+          <h3>TO DO LIST</h3>
+        </div>
+        <div>
+          <button className="btn btn-warning" onClick={() => setModal(true)}>
+            Create Task
+          </button>
+          {credentials && (
+            <button className="btn btn-danger logout" onClick={logout}>
+              Logout
+            </button>
+          )}
+          <button
+            onClick={() => setDarkMode((previousDarkMode) => !previousDarkMode)}
+            className="save"
+          >
+            <VscColorMode />
+          </button>
+        </div>
       </div>
 
-      <div className="header text-center">
-        <h3>Todo List</h3>
-        <button className="btn btn-primary mt-2" onClick={() => setModal(true)}>
-          Create Task
-        </button>
-      </div>
-
-      <div style={{ "text-align": "left", margin: "2rem 8rem 0" }}>
+      <div style={{ textAlign: "left", margin: "2rem 8rem 0" }}>
         <h4>All Task</h4>
       </div>
 
       <div className="task-container">
         {taskList &&
-          taskList.map((obj, index) => (
+          taskList.map((task, index) => (
             <Card
               key={index}
-              taskObj={obj}
+              // taskObj={obj}
+              task={task}
               index={index}
               deleteTask={deleteTask}
-              updateListArray={updateListArray}
+              // updateListArray={updateListArray}
+              baseURL={baseURL}
+              updateTask={updateTask}
             />
           ))}
       </div>
-      <CreateTaskPopup toggle={toggle} modal={modal} save={saveTask} />
+      <CreateTaskPopup
+        toggle={toggle}
+        modal={modal}
+        baseURL={baseURL}
+        handleAddTask={handleAddTask}
+      />
     </div>
   );
 };
