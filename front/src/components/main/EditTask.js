@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
-import { CredentialContext } from "../../App";
+import React, { useState } from "react";
+//import { CredentialContext } from "../../App";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 const EditTaskPopup = ({ modal, toggle, baseURL, updateTask, task }) => {
-  const [credentials] = useContext(CredentialContext);
+  //const [credentials] = useContext(CredentialContext);
   const [id] = useState(task._id);
   const [taskName, setTaskName] = useState(task.taskName);
   const [description, setDescription] = useState(task.description);
@@ -38,7 +38,7 @@ const EditTaskPopup = ({ modal, toggle, baseURL, updateTask, task }) => {
     e.preventDefault();
     fetch(baseURL + "/Main/" + id, {
       method: "PUT",
-      Authorization: `Basic ${credentials.username}:${credentials.password}`,
+      //Authorization: `Basic ${credentials.username}:${credentials.password}`,
       body: JSON.stringify({
         taskName,
         description,
@@ -49,7 +49,8 @@ const EditTaskPopup = ({ modal, toggle, baseURL, updateTask, task }) => {
     })
       .then((res) => res.json())
       .then(() => {
-        updateTask(task._id);
+        //console.log(task)
+        updateTask(task);
         // setTaskName("");
         // setDescription("");
         toggle();

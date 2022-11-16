@@ -1,0 +1,149 @@
+* {
+  box-sizing: border-box;
+}
+
+.html,
+.body,
+.wrapper {
+  height: 100vh;
+}
+
+.warning {
+    color: red;
+    font-weight: bolder;
+}
+
+@keyframes background {
+  100% {
+    background-size: 4000px 2000px;
+  }
+}
+
+.body {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0 24px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1030%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='%230e2a47'%3e%3c/rect%3e%3cpath d='M 0%2c115 C 36%2c102.6 108%2c51.8 180%2c53 C 252%2c54.2 288%2c120.6 360%2c121 C 432%2c121.4 468%2c64.8 540%2c55 C 612%2c45.2 648%2c78.6 720%2c72 C 792%2c65.4 828%2c14 900%2c22 C 972%2c30 1008%2c111.4 1080%2c112 C 1152%2c112.6 1188%2c22.6 1260%2c25 C 1332%2c27.4 1404%2c104.2 1440%2c124L1440 560L0 560z' fill='rgba(191%2c 57%2c 124%2c 1)'%3e%3c/path%3e%3cpath d='M 0%2c235 C 48%2c226.6 144%2c190.8 240%2c193 C 336%2c195.2 384%2c256.4 480%2c246 C 576%2c235.6 624%2c141 720%2c141 C 816%2c141 864%2c240.4 960%2c246 C 1056%2c251.6 1104%2c173.4 1200%2c169 C 1296%2c164.6 1392%2c213 1440%2c224L1440 560L0 560z' fill='%2390a603'%3e%3c/path%3e%3cpath d='M 0%2c299 C 18%2c314.2 54%2c365.8 90%2c375 C 126%2c384.2 144%2c342.8 180%2c345 C 216%2c347.2 234%2c387.4 270%2c386 C 306%2c384.6 324%2c336.6 360%2c338 C 396%2c339.4 414%2c393 450%2c393 C 486%2c393 504%2c337 540%2c338 C 576%2c339 594%2c400.4 630%2c398 C 666%2c395.6 684%2c333.2 720%2c326 C 756%2c318.8 774%2c360.6 810%2c362 C 846%2c363.4 864%2c323.8 900%2c333 C 936%2c342.2 954%2c408.2 990%2c408 C 1026%2c407.8 1044%2c336.6 1080%2c332 C 1116%2c327.4 1134%2c394.4 1170%2c385 C 1206%2c375.6 1224%2c286.6 1260%2c285 C 1296%2c283.4 1314%2c372.2 1350%2c377 C 1386%2c381.8 1422%2c322.6 1440%2c309L1440 560L0 560z' fill='%23184a7e'%3e%3c/path%3e%3cpath d='M 0%2c506 C 48%2c495.4 144%2c454.6 240%2c453 C 336%2c451.4 384%2c497.6 480%2c498 C 576%2c498.4 624%2c454.4 720%2c455 C 816%2c455.6 864%2c498.2 960%2c501 C 1056%2c503.8 1104%2c465 1200%2c469 C 1296%2c473 1392%2c510.6 1440%2c521L1440 560L0 560z' fill='%232264ab'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1030'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
+  background-size: 3000px 2000px;
+  background-position: -500px 0;
+  color: #f9f9f9;
+  animation: background 8s infinite alternate linear;
+}
+
+@media (width >= 500px) {
+  body {
+    padding: 0;
+  }
+}
+
+.login {
+    position: fixed;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 90%;
+  padding: 70px 30px 44px;
+  border-radius: 22px;
+  background: #161616;
+  text-align: center;
+}
+
+@media (width >= 500px) {
+  .login {
+    width: 450px;
+  }
+}
+
+.login > h2 {
+  font-size: 36px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.login > h3 {
+  color: rgba(255, 255, 255, 0.38);
+  margin: 0 0 30px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.login-form {
+  display: grid;
+  gap: 16px;
+  place-items: center;
+  width: 100%;
+  margin: 0;
+}
+
+.textbox {
+  width: 100%;
+  position: relative;
+}
+
+.textbox span {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  translate: 0 -50%;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.login-form input,
+.login-form button {
+  width: 100%;
+  height: 60px;
+  outline: none;
+  padding: 0;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.login-form input {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  font-size: 18px;
+  padding: 0 20px 0 50px;
+  color: inherit;
+}
+
+.login-form input:focus {
+  border-color: #90A603;
+}
+
+.login-form input:focus ~ span {
+  color: #90A603;
+}
+
+.login-form button {
+  cursor: pointer;
+  background: #90A603;
+  color: #393b45;
+  border: 0;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.login-form button:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.7);
+  color: black;
+}
+
+.login-form h4 {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  text-align: left;
+  text-decoration: none;
+}
+
+.link {
+    text-decoration: none;
+    color: #90A603;
+}
+
+.link:hover {
+    text-decoration: none;
+    color: rgba(191, 57, 124, 1);
+}

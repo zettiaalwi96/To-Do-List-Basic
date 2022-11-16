@@ -1,11 +1,13 @@
-import React, { useState, useContext } from "react";
-import { CredentialContext } from "../../App";
+import React, { useState} from "react";
+//import { CredentialContext } from "../../App";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 const CreateTaskPopup = ({ modal, toggle, baseURL, handleAddTask }) => {
-  const [credentials] = useContext(CredentialContext);
+  //const [credentials] = useContext(CredentialContext);
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
+
+  const userId = localStorage.getItem("userId")
 
   //------------ STORE DATA IN LOCAL STORAGE INSTEAD TO DATABASE ----------
   // const handleChange = (e) => {
@@ -27,12 +29,15 @@ const CreateTaskPopup = ({ modal, toggle, baseURL, handleAddTask }) => {
   // };
   //------------------------------------------------------------------------
 
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     fetch(baseURL + "/Main", {
       method: "POST",
-      Authorization: `Basic ${credentials.username}:${credentials.password}`,
+      //Authorization: `Basic ${credentials.username}:${credentials.password}`,
       body: JSON.stringify({
+        userId,
         taskName,
         description,
       }),
@@ -42,7 +47,7 @@ const CreateTaskPopup = ({ modal, toggle, baseURL, handleAddTask }) => {
     })
       .then((res) => res.json())
       .then((resJson) => {
-        handleAddTask(resJson);
+        handleAddTask(resJson)
       })
       .then(() => {
         setTaskName("");

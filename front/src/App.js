@@ -1,32 +1,42 @@
-import React, { useState } from "react";
+import React, {useContext } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AppContext } from "./components/darkMode/darkMode";
 import Login from "./components/register/Login";
 import SignUp from "./components/register/SignUp";
 import MainPage from "./components/main/MainPage";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
 
-export const CredentialContext = React.createContext();
+const ProtectedRoute = ({ userId, children }) => {
+  if (!userId) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
 
 const App = () => {
-  const credentialState = useState(null);
+  const { darkMode } = useContext(AppContext);
+  const userId = localStorage.getItem("userId");
 
   return (
-    <div className="App">
-      <CredentialContext.Provider value={credentialState}>
+      <div className={`App ${darkMode ? "dark-mode" : ""}`}>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />}></Route>
+            <Route path="/" element={<Login />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
-            {/* <ProtectedRoute> */}
-              <Route path="/Main" element={<MainPage />}></Route>
-            {/* </ProtectedRoute> */}
+            <Route
+              path="/Main"
+              element={
+                <ProtectedRoute userId={userId}>
+                  <MainPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
-      </CredentialContext.Provider>
-    </div>
+      </div>
   );
 };
 

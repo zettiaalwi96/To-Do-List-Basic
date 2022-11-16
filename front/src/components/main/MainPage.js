@@ -1,21 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { VscColorMode } from "react-icons/vsc";
-import { CredentialContext } from "../../App";
-
+import { AppContext } from "../darkMode/darkMode";
 import CreateTaskPopup from "./CreateTask";
 import Card from "./Card";
 
 let baseURL = "http://localhost:3001";
 
 const MainPage = () => {
-  const [credentials, setCredentials] = useContext(CredentialContext);
   const navigate = useNavigate();
   const [modal, setModal] = useState(false);
   const [taskList, setTaskList] = useState([]);
-  const [task] = useState({});
+  //const [task] = useState({});
+  const {toggleDarkMode} = useContext(AppContext);
 
-  const [darkMode, setDarkMode] = useState(false);
+  // To display the username on the header
+  const username = localStorage.getItem("username");
+  console.log(username);
+
+  // To display the username on the header
+  const userId = localStorage.getItem("userId");
+  console.log(userId);
 
   const toggle = () => {
     setModal(!modal);
@@ -59,12 +64,12 @@ const MainPage = () => {
   //------------------------------------------------------------------------
 
   const logout = () => {
-    setCredentials(null);
-    navigate('/login')
+    localStorage.clear();
+    navigate("/");
   };
 
   const getTask = () => {
-    fetch(baseURL + "/Main", {
+    fetch(`${baseURL}/Main/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -86,11 +91,12 @@ const MainPage = () => {
   };
   useEffect(() => {
     getTask();
-  });
+  }, []);
 
-  const handleAddTask = () => {
+  const handleAddTask = (newTask) => {
     const currentTask = [...taskList];
-    currentTask.unshift(task);
+    currentTask.push(newTask);
+    //console.log(newTask)
     setTaskList(currentTask);
   };
 
@@ -110,32 +116,34 @@ const MainPage = () => {
   };
 
   const updateTask = (updatedTask) => {
+    //console.log(updatedTask)
     const currentTasks = [...taskList];
     const findIndex = currentTasks.findIndex(
       (currentTask) => currentTask._id === updatedTask._id
     );
     currentTasks[findIndex] = updatedTask;
     setTaskList(currentTasks);
+    console.log(taskList);
   };
 
   return (
-    <div className={`${darkMode && "dark-mode"}`}>
+    <div>
       <div className="header">
         <div className="greetings">
-          <h6> Hello {credentials && credentials.username}, welcome ! </h6>
+          <h6> Hello {username}, welcome ! </h6>
           <h3>TO DO LIST</h3>
         </div>
         <div>
           <button className="btn btn-warning" onClick={() => setModal(true)}>
             Create Task
           </button>
-          {credentials && (
+          {username && (
             <button className="btn btn-danger logout" onClick={logout}>
               Logout
             </button>
           )}
           <button
-            onClick={() => setDarkMode((previousDarkMode) => !previousDarkMode)}
+            onClick={toggleDarkMode}
             className="save"
           >
             <VscColorMode />

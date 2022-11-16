@@ -2,8 +2,10 @@ const express = require("express");
 const task = express.Router();
 const TaskSchema = require('../models/taskSchema')
 
-task.get("/", (req, res) => {
-  TaskSchema.find({}, (err, tasks) => {
+task.get("/:id", (req, res) => {
+  console.log(req.params.id)
+  let userId = req.params.id
+  TaskSchema.find({userId}, (err, tasks) => {
     if (err) {
       res.status(400).json({ err: err.message });
     } else {
